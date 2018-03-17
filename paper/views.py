@@ -45,13 +45,16 @@ class PaperView(View):
         return name_list, href_list
 
     def getPaperAuthor(self, data):
+        authors = []
+
         try:
-            authors = []
             soup = BeautifulSoup(data, 'html.parser')
-            tags_div = soup.find_all('li', class_="publication-author-list__item")
+            # tags_div = soup.find_all('li', class_="publication-author-list__item")
+            tags_div = soup.find_all('meta', property="citation_author")
             for tag_div in tags_div:
-                tag_a = tag_div.find('a', class_='nova-e-link nova-e-link--color-inherit nova-e-link--theme-bare')
-                authors.append((tag_a.text).strip())
+                # tag_a = tag_div.find('a', class_='nova-e-link nova-e-link--color-inherit nova-e-link--theme-bare')
+                authors.append(tag_div.get('content'))
+            DB.hset('cit_link:' + sort, sort, json.dumps(authors))
             return authors
         except:
             return []
