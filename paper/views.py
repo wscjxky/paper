@@ -98,38 +98,42 @@ class PaperView(View):
     def get(self, request, *args, **kwargs):
 
         url = 'https://www.researchgate.net/'
-        keys = DB.keys('cit_link*')
-        print(len(keys))
+        # keys = DB.keys('cit_link*')
+        # print(len(keys))
 
-        for k in keys:
-            try:
-                query=k[9:]
-                query = query.replace('_', ' ')
-                st_len=len('publication/224504381_')
-                res = Paper.objects.get(title__contains=query.strip())
-                data = DB.hgetall(k)
-                for key,value in (data).items():
-                    title=key[st_len:].replace('_',' ')
-                    try:
-                        p1 = Paper.objects.get(title=title)
-                        p1.save()
-                    except:
-                        p1 = Paper(title=title,url=url+key,cit_paper=res)
-                        p1.save()
+        # p1 = Paper.objects.get(title='test')
+        # p1.cit_paper=Paper.objects.get(id=3)
+        # p1.save()
 
-                    value= (json.loads(value))
-                    for name in list(value):
-                        try:
-                            a1=Author(name=name)
-                            a1.save()
-                        except :
-                            a1 = Author.objects.get(name=name)
-                            a1.save()
-                        print(p1.id)
-                        p1.authors.add(a1)  # 多对多使用add方法进行插入
-                        p1.save()
-            except Exception as e:
-                print(e)
+        # for k in keys:
+        #     try:
+        #         query=k[9:]
+        #         query = query.replace('_', ' ')
+        #         st_len=len('publication/224504381_')
+        #         res = Paper.objects.get(title__contains=query.strip())
+        #         data = DB.hgetall(k)
+        #         for key,value in (data).items():
+        #             title=key[st_len:].replace('_',' ')
+        #             try:
+        #                 p1 = Paper.objects.get(title=title)
+        #                 p1.save()
+        #             except:
+        #                 p1 = Paper(title=title,url=url+key,cit_paper=res)
+        #                 p1.save()
+        #
+        #             value= (json.loads(value))
+        #             for name in list(value):
+        #                 try:
+        #                     a1=Author(name=name)
+        #                     a1.save()
+        #                 except :
+        #                     a1 = Author.objects.get(name=name)
+        #                     a1.save()
+        #                 print(p1.id)
+        #                 p1.authors.add(a1)  # 多对多使用add方法进行插入
+        #                 p1.save()
+        #     except Exception as e:
+        #         print(e)
 
             # break
         #
