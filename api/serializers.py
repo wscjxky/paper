@@ -17,6 +17,6 @@ class PaperSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
     class Meta:
         model = Paper
-        fields = ('id', 'title','url', 'created','authors')
+        fields = ('id', 'title','url', 'created','authors','cit_paper')
         read_only_fields = ('created', 'id')
 

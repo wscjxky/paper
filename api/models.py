@@ -13,6 +13,6 @@ class Paper(models.Model):
     authors = models.ManyToManyField(Author, verbose_name='作者')
     created = models.DateTimeField('创建时间', auto_now=True)
     url = models.CharField('链接de',unique=True,max_length=244, null=True)
-    cit_paper = models.ForeignKey('self', blank=True, null=True)
+    cit_paper = models.ManyToManyField('self',  symmetrical=False,verbose_name='引用')
 
 

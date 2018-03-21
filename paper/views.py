@@ -22,14 +22,12 @@ M_Headers = {
     , 'Referer': 'http://music.163.com/user/fans?id=97526496'
 
 }
-socket.setdefaulttimeout(10)
+socket.setdefaulttimeout(60)
 DB = redis.Redis(host='47.94.251.202', port=6379, db=4, password='wscjxky', decode_responses=True)
 key_cache = "paper:"
 
 
 class PaperView(View):
-    base_url = 'https://www.researchgate.net/'
-
     def getPaperLinkdata(self, data):
         href_list = []
         name_list = []
