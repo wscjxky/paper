@@ -11,10 +11,17 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ('id', 'name', 'created')
         read_only_fields = ('created', 'id',)
+class BasePaperSerializer(serializers.ModelSerializer):
+    authors = AuthorSerializer(many=True, read_only=True)
+    class Meta:
+        model = Paper
+        fields = ('id', 'title','url', 'created','authors')
+        read_only_fields = ('created', 'id')
 
 
 class PaperSerializer(serializers.ModelSerializer):
     authors = AuthorSerializer(many=True, read_only=True)
+    cit_paper = BasePaperSerializer(many=True, read_only=True)
     class Meta:
         model = Paper
         fields = ('id', 'title','url', 'created','authors','cit_paper')

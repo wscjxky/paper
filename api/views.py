@@ -8,6 +8,7 @@ import time
 from bs4 import BeautifulSoup
 
 # Create your views here.
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import AllowAny
@@ -88,13 +89,24 @@ class PaperViewSet(viewsets.ModelViewSet):
     serializer_class = PaperSerializer
     permission_classes = [AllowAny]  # 为了方便测试暂时设为AllowAny
 
+    @detail_route(methods=['GET'], url_path='searchPaper')
+    def searchPaper(self, request, pk):
+        source_url=request.GET['source_url']
+        cit_url=request.GET['cit_url']
+        paper=Paper.objects.get(Q(url__contains=source_url))
+        citpaper=Paper.objects.get(Q(url__contains=cit_url))
+        paper.cit_paper.add(citpaper)
+        paper.save()
+        print(citpaper.title)
+        return  Response(citpaper.title)
     @detail_route(methods=['GET'], url_path='setAuthor')
     def setAuthor(self, request, pk):
-        for pk in range(63, 100):
+        for pk in range(63, 92):
             try:
                 paper = Paper.objects.get(id=pk)
             except:
                 continue
+            print(paper.title)
             sort = paper.title
             url = paper.url
             try:
@@ -164,7 +176,7 @@ class PaperViewSet(viewsets.ModelViewSet):
         return Response('ok')
 
     @detail_route(methods=['GET'], url_path='isCit')
-    def getCit(self, request, pk):
+    def isCit(self, request, pk):
         for pk in range(1, 2):
             print(pk)
             try:
@@ -206,4 +218,21 @@ class PaperViewSet(viewsets.ModelViewSet):
                             p1.save()
             except Exception as e:
                 print(e)
+        return Response('ok')
+
+    @detail_route(methods=['GET'], url_path='updataCit')
+    def getCit(self, request, pk):
+        for pk in range(0, 188):
+            try:
+                paper = Paper.objects.get(id=pk)
+            except:
+                continue
+            paper.save()
+            cit_paper = paper.cit_paper.all()
+            for p in cit_paper:
+                print(p)
+                p.cit_paper.add(paper)
+                p.save()
+                paper.cit_paper.remove(p)
+                paper.save()
         return Response('ok')
